@@ -7,8 +7,8 @@ import React from 'react';
 import { Clock, Phone, ChefHat, Info, Coffee, MapPin, ChevronLeft, ChevronRight, Star, Quote, MessageSquareHeart } from 'lucide-react';
 
 const TEAS_COFFEE = [
-  { name: 'Normal Tea', price: '10' },
-  { name: 'Cutting Tea', price: '7' },
+  { name: 'Normal Tea', price: '12' },
+  { name: 'Cutting Tea', price: '8' },
   { name: 'Lemon Tea', price: '20' },
   { name: 'Black Tea', price: '20' },
   { name: 'Kulhad Tea', price: '15' },
@@ -17,7 +17,7 @@ const TEAS_COFFEE = [
 ];
 
 const SNACKS = [
-  { name: 'Plain Maggi', price: '30' },
+  { name: 'Plain Maggi', price: '40' },
   { name: 'Veg Maggi', price: '50' },
   { name: 'Pasta', price: '50' },
   { name: 'Macaroni', price: '50' },
@@ -30,7 +30,7 @@ const SNACKS = [
 ];
 
 const BREAD = [
-  { name: 'Aloo Pratha', price: '40' },
+  { name: 'Aloo Pratha', price: '20' },
   { name: 'Paneer Pratha', price: '60' },
 ];
 
