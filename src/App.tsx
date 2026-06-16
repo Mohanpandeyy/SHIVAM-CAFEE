@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Clock, Phone, ChefHat, Info, Coffee, MapPin, ChevronLeft, ChevronRight, Star, Quote, MessageSquareHeart } from 'lucide-react';
+import { Clock, Phone, ChefHat, Info, Coffee, MapPin, ChevronLeft, ChevronRight, Star, Quote, MessageSquareHeart, ArrowUp } from 'lucide-react';
 
 const TEAS_COFFEE = [
   { name: 'Normal Tea', price: '12' },
@@ -21,7 +21,7 @@ const SNACKS = [
   { name: 'Veg Maggi', price: '50' },
   { name: 'Pasta', price: '50' },
   { name: 'Macaroni', price: '50' },
-  { name: 'Aloo Patties', price: '15' },
+  { name: 'Aloo Patties', price: '20' },
   { name: 'Paneer Patties', price: '25' },
   { name: 'Samosa', price: '15' },
   { name: 'Sandwich', price: '30' },
@@ -30,7 +30,7 @@ const SNACKS = [
 ];
 
 const BREAD = [
-  { name: 'Aloo Pratha', price: '20' },
+  { name: 'Aloo Pratha', price: '40' },
   { name: 'Paneer Pratha', price: '60' },
 ];
 
@@ -138,13 +138,19 @@ const FadeInOnScroll = ({ children, delay = 0 }: { children: React.ReactNode, de
 };
 
 const MenuSection = ({ title, items, image }: { title: string, items: {name: string, price: string}[], image: string }) => {
+  const [isLoaded, setIsLoaded] = React.useState(false);
+
   return (
     <div className="flex flex-col md:flex-row gap-8 bg-white p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-100 overflow-hidden transform transition duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
-      <div className="md:w-[240px] shrink-0">
+      <div className="md:w-[240px] shrink-0 relative rounded-xl border border-stone-100 overflow-hidden bg-stone-50">
+        {!isLoaded && (
+          <div className="absolute inset-0 bg-stone-200 animate-pulse" />
+        )}
         <img 
           src={image} 
           alt={title} 
-          className="w-full h-48 md:h-full object-cover rounded-xl border border-stone-100"
+          onLoad={() => setIsLoaded(true)}
+          className={`w-full h-48 md:h-full object-cover transition-opacity duration-700 ease-out ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           loading="lazy"
         />
       </div>
@@ -162,6 +168,43 @@ const MenuSection = ({ title, items, image }: { title: string, items: {name: str
     </div>
   );
 }
+
+const BackToTopButton = () => {
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    const toggleVisibility = () => {
+      // Show button if we pass a rough header height (e.g. 400px)
+      if (window.scrollY > 400) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  return (
+    <button
+      onClick={scrollToTop}
+      className={`fixed bottom-6 left-6 z-50 p-4 rounded-full bg-stone-900 text-stone-100 shadow-[0_4px_14px_0_rgba(28,25,23,0.39)] hover:bg-stone-800 hover:scale-110 active:scale-95 transition-all duration-300 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12 pointer-events-none'
+      }`}
+      aria-label="Back to top"
+    >
+      <ArrowUp className="w-6 h-6" />
+    </button>
+  );
+};
 
 export default function App() {
   return (
@@ -289,9 +332,14 @@ export default function App() {
             {/* Map Card */}
             <FadeInOnScroll delay={250}>
               <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.05)] border border-stone-100 p-2 overflow-hidden sticky top-[25rem]">
-              <div className="px-6 py-4 border-b border-stone-100 mb-2 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-rose-600" />
-                <h3 className="font-display text-lg font-bold">Find Us Here</h3>
+              <div className="px-6 py-4 border-b border-stone-100 mb-2 flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-rose-600" />
+                  <h3 className="font-display text-lg font-bold">Find Us Here</h3>
+                </div>
+                <p className="text-stone-600 text-sm font-sans mt-1 leading-relaxed">
+                  20-A Vidhansabha Marg, Ratan Square Building, 6th Floor, Canteen No. 611/Cafe No. 611, Lucknow 226001
+                </p>
               </div>
               <iframe 
                 className="w-full h-[350px] rounded-2xl opacity-90 hover:opacity-100 transition-opacity"
@@ -342,6 +390,8 @@ export default function App() {
       >
         <WhatsAppIcon />
       </a>
+
+      <BackToTopButton />
     </div>
   );
 }
